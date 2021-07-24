@@ -1,4 +1,4 @@
-# libp2p-webrtc-star-service
+# docker-verdaccio-gitea-auth
 
 [![docker build](https://img.shields.io/docker/cloud/build/sinlov/docker-verdaccio-gitea-auth)](https://hub.docker.com/r/sinlov/docker-verdaccio-gitea-auth)
 [![docker version semver](https://img.shields.io/docker/v/sinlov/docker-verdaccio-gitea-auth?sort=semver)](https://hub.docker.com/r/sinlov/docker-verdaccio-gitea-auth/tags?page=1&ordering=last_updated)
