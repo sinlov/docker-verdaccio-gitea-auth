@@ -72,7 +72,7 @@ services:
   # https://hub.docker.com/r/sinlov/docker-verdaccio-gitea-auth
   verdaccio-v4-permissions:
     container_name: 'verdaccio-v4-permissions'
-    image: 'sinlov/docker-verdaccio-gitea-auth:latest'
+    image: 'sinlov/docker-verdaccio-gitea-auth:latest' # https://hub.docker.com/r/sinlov/docker-verdaccio-gitea-auth/tags?page=1&ordering=last_updated
     user: root
     command: "chown -R verdaccio: /verdaccio/"
     volumes:
@@ -82,7 +82,7 @@ services:
   # https://hub.docker.com/r/sinlov/docker-verdaccio-gitea-auth
   verdaccio-v4:
     container_name: 'verdaccio-v4'
-    image: 'sinlov/docker-verdaccio-gitea-auth:latest' # https://hub.docker.com/r/verdaccio/verdaccio/tags?page=1&ordering=last_updated
+    image: 'sinlov/docker-verdaccio-gitea-auth:latest' # https://hub.docker.com/r/sinlov/docker-verdaccio-gitea-auth/tags?page=1&ordering=last_updated
     depends_on:
       - 'verdaccio-v4-permissions'
     user: verdaccio
