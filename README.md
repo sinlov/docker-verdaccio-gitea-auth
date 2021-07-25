@@ -24,8 +24,9 @@ docker run -d --rm \
 
 ## devops docker-compose
 
+### verdaccio app config.yaml
+
 - new config at `./data/verdaccio/conf/config.yaml` full config see [app/config/config.yaml](app/config/config.yaml)
-- more config see [https://www.npmjs.com/package/verdaccio-gitea-auth#configuration](https://www.npmjs.com/package/verdaccio-gitea-auth#configuration)
 
 ```yml
 # This is the config file used for the docker images.
@@ -58,6 +59,10 @@ logs:
   - { type: stdout, format: pretty, level: trace }
   #- {type: file, path: verdaccio.log, level: info}
 ```
+
+- more config see [https://www.npmjs.com/package/verdaccio-gitea-auth#configuration](https://www.npmjs.com/package/verdaccio-gitea-auth#configuration)
+
+### config docker-compose
 
 - write docker-compose.yml config as below
 
