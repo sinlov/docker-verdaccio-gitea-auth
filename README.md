@@ -17,7 +17,7 @@
 docker run -d --rm \
   --name verdaccio-gitea-auth \
   -p 4873:4873 \
-  sinlov/docker-verdaccio-gitea-auth:latest
+  sinlov/docker-verdaccio-gitea-auth:4.12.2
 ```
 
 > WARN: this way not load config and gitea-auth, only test for run container.
@@ -25,6 +25,7 @@ docker run -d --rm \
 ## devops docker-compose
 
 - new config at `./data/verdaccio/conf/config.yaml` full config see [app/config/config.yaml](app/config/config.yaml)
+- more config see [https://www.npmjs.com/package/verdaccio-gitea-auth#configuration](https://www.npmjs.com/package/verdaccio-gitea-auth#configuration)
 
 ```yml
 # This is the config file used for the docker images.
@@ -71,7 +72,7 @@ services:
   # https://hub.docker.com/r/sinlov/docker-verdaccio-gitea-auth
   verdaccio-v4-permissions:
     container_name: 'verdaccio-v4-permissions'
-    image: 'sinlov/docker-verdaccio-gitea-auth:latest'
+    image: 'sinlov/docker-verdaccio-gitea-auth:4.12.2'
     user: root
     command: "chown -R verdaccio: /verdaccio/"
     volumes:
@@ -81,7 +82,7 @@ services:
   # https://hub.docker.com/r/sinlov/docker-verdaccio-gitea-auth
   verdaccio-v4:
     container_name: 'verdaccio-v4'
-    image: 'sinlov/docker-verdaccio-gitea-auth:latest' # https://hub.docker.com/r/verdaccio/verdaccio/tags?page=1&ordering=last_updated
+    image: 'sinlov/docker-verdaccio-gitea-auth:4.12.2' # https://hub.docker.com/r/verdaccio/verdaccio/tags?page=1&ordering=last_updated
     depends_on:
       - 'verdaccio-v4-permissions'
     user: verdaccio
