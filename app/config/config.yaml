@@ -1,23 +1,39 @@
-
-#
 # This is the config file used for the docker images.
 # It allows all users to do anything, so don't use it on production systems.
 #
 # Do not configure host and port under `listen` in this file
 # as it will be ignored when using docker.
-# see https://github.com/verdaccio/verdaccio/blob/master/wiki/docker.md#docker-and-custom-port-configuration
+# see https://github.com/verdaccio/verdaccio/blob/master/docker-examples/README.md
 #
 # Look here for more config file examples:
-# https://github.com/verdaccio/verdaccio/tree/master/conf
+# https://verdaccio.org/docs/en/best
 #
 
 # path to a directory with all packages
-storage: /app/storage
 
-gitea-auth:
-  url: https://url-to-your-gitea-server
-  defaultOrg: gitea
+storage: /verdaccio/storage
 
+auth:
+  # https://verdaccio.org/docs/en/plugin-auth
+  gitea-auth:
+    # gitea-auth.url is not the api to the URl but just the server itself. Underneath we're concatenating /api/v1/user/orgs
+    url: https://url-to-your-gitea-server
+    # gitea-auth.defaultOrg If no orgs are in the list it defaults to ["gitea"]
+    defaultOrg: gitea
+  # htpasswd:
+  #   file: /verdaccio/conf/htpasswd
+    # Maximum amount of users allowed to register, defaults to "+inf".
+    # You can set this to -1 to disable registration.
+    #max_users: 1000
+security:
+  api:
+    jwt:
+      sign:
+        expiresIn: 60d
+        notBefore: 1
+  web:
+    sign:
+      expiresIn: 7d
 
 # a list of other known repositories we can talk to
 uplinks:
@@ -29,6 +45,16 @@ uplinks:
     url: https://registry.npm.taobao.org
 
 packages:
+
+  #https://verdaccio.org/docs/en/best#private-registry
+  # '@sinlov/*':
+  #   access: $all
+  #   publish: $authenticated
+  #https://verdaccio.org/docs/en/best#private-registry
+  # 'com.sinlov.*':
+  #   access: $authenticated
+  #   publish: $authenticated
+
   '@*/*':
     # scoped packages
     access: $all
@@ -38,6 +64,11 @@ packages:
       - yarn
       - taobao
 
+  # '@*/*':
+  #   # scoped packages
+  #   access: $all
+  #   publish: $authenticated
+  #   proxy: npmjs
 
   '**':
     # allow all users (including non-authenticated users) to read and
@@ -57,10 +88,12 @@ packages:
       - yarn
       - taobao
 
+# To use `npm audit` uncomment the following section
+middlewares:
+  audit:
+    enabled: true
+
 # log settings
 logs:
-  - {type: stdout, format: pretty, level: http}
+  - { type: stdout, format: pretty, level: trace }
   #- {type: file, path: verdaccio.log, level: info}
-
-listen:
-  - 0.0.0.0:4873

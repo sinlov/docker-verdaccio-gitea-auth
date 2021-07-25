@@ -5,23 +5,60 @@
 [![docker image size](https://img.shields.io/docker/image-size/sinlov/docker-verdaccio-gitea-auth)](https://hub.docker.com/r/sinlov/docker-verdaccio-gitea-auth)
 
 - docker hub see https://hub.docker.com/r/sinlov/docker-verdaccio-gitea-auth
-- this is fast way to run https://verdaccio.org/
+- this is fast way to run https://verdaccio.org/ and auth by https://gitea.io/
 
-## repo
+## source repo
 
 [https://github.com/sinlov/docker-verdaccio-gitea-auth](https://github.com/sinlov/docker-verdaccio-gitea-auth)
-
 
 ## fast use
 
 ```sh
-docker run --rm \
+docker run -d --rm \
   --name verdaccio-gitea-auth \
   -p 4873:4873 \
   sinlov/docker-verdaccio-gitea-auth:latest
 ```
 
-## docker-compose
+> WARN: this way not load config and gitea-auth, only test for run container.
+
+## devops docker-compose
+
+- new config at `./data/verdaccio/conf/config.yaml` full config see [app/config/config.yaml](app/config/config.yaml)
+
+```yml
+# This is the config file used for the docker images.
+# It allows all users to do anything, so don't use it on production systems.
+#
+# Do not configure host and port under `listen` in this file
+# as it will be ignored when using docker.
+#
+# Look here for more config file examples:
+# https://verdaccio.org/docs/en/best
+# path to a directory with all packages
+
+storage: /verdaccio/storage
+
+auth:
+  # https://verdaccio.org/docs/en/plugin-auth
+  gitea-auth:
+    # gitea-auth.url is not the api to the URl but just the server itself. Underneath we're concatenating /api/v1/user/orgs
+    url: https://url-to-your-gitea-server
+    # gitea-auth.defaultOrg If no orgs are in the list it defaults to ["gitea"]
+    defaultOrg: gitea
+  # htpasswd:
+  #   file: /verdaccio/conf/htpasswd
+    # Maximum amount of users allowed to register, defaults to "+inf".
+    # You can set this to -1 to disable registration.
+    #max_users: 1000
+
+# log settings
+logs:
+  - { type: stdout, format: pretty, level: trace }
+  #- {type: file, path: verdaccio.log, level: info}
+```
+
+- write docker-compose.yml config as below
 
 ```yml
 # copy right
@@ -31,12 +68,46 @@ version: '3.7'
 networks:
   default:
 services:
-  verdaccio-gitea-auth:
-    container_name: 'verdaccio-gitea-auth'
-    image: sinlov/docker-verdaccio-gitea-auth:4.12.2-alpine # https://hub.docker.com/r/sinlov/docker-verdaccio-gitea-auth/tags?page=1&ordering=last_updated
+  # https://hub.docker.com/r/sinlov/docker-verdaccio-gitea-auth
+  verdaccio-v4-permissions:
+    container_name: 'verdaccio-v4-permissions'
+    image: 'sinlov/docker-verdaccio-gitea-auth:latest'
+    user: root
+    command: "chown -R verdaccio: /verdaccio/"
+    volumes:
+      - './data/verdaccio/conf:/verdaccio/conf'
+      - './data/verdaccio/storage:/verdaccio/storage'
+      - './data/verdaccio/plugins:/verdaccio/plugins' # use plugins
+  # https://hub.docker.com/r/sinlov/docker-verdaccio-gitea-auth
+  verdaccio-v4:
+    container_name: 'verdaccio-v4'
+    image: 'sinlov/docker-verdaccio-gitea-auth:latest' # https://hub.docker.com/r/verdaccio/verdaccio/tags?page=1&ordering=last_updated
+    depends_on:
+      - 'verdaccio-v4-permissions'
+    user: verdaccio
     ports:
       - '4873:4873'
-    # environment:
-    #   - NODE_ENV=production
-    restart: on-failure:3 # on-failure:3 or unless-stopped always default no
+    volumes:
+      - './data/verdaccio/conf:/verdaccio/conf'
+      - './data/verdaccio/storage:/verdaccio/storage'
+      - './data/verdaccio/plugins:/verdaccio/plugins' # use plugins
+    restart: on-failure:3 # on-failure:3 or unless-stopped always default "no"
 ```
+
+- run docker container
+
+```bash
+docker-compose up -d
+```
+
+## usage
+
+- open https://url-to-your-gitea-server and login
+- to page https://url-to-your-gitea-server/user/settings/applications add Access Tokens
+- then open [http://:0.0.0.0:4873](http://:0.0.0.0:4873)
+
+> this url will change as you config of docker
+
+- login as
+  - user    `gitea user`
+  - passwod `Access Tokens`
