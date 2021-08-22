@@ -75,8 +75,8 @@ networks:
   default:
 services:
   # https://hub.docker.com/r/sinlov/docker-verdaccio-gitea-auth
-  verdaccio-v4-permissions:
-    container_name: 'verdaccio-v4-permissions'
+  verdaccio-v5-permissions:
+    container_name: 'verdaccio-v5-permissions'
     image: 'sinlov/docker-verdaccio-gitea-auth:latest' # https://hub.docker.com/r/sinlov/docker-verdaccio-gitea-auth/tags?page=1&ordering=last_updated
     user: root
     command: "chown -R verdaccio: /verdaccio/"
@@ -85,11 +85,11 @@ services:
       - './data/verdaccio/storage:/verdaccio/storage'
       - './data/verdaccio/plugins:/verdaccio/plugins' # use plugins
   # https://hub.docker.com/r/sinlov/docker-verdaccio-gitea-auth
-  verdaccio-v4:
-    container_name: 'verdaccio-v4'
+  verdaccio-v5:
+    container_name: 'verdaccio-v5'
     image: 'sinlov/docker-verdaccio-gitea-auth:latest' # https://hub.docker.com/r/sinlov/docker-verdaccio-gitea-auth/tags?page=1&ordering=last_updated
     depends_on:
-      - 'verdaccio-v4-permissions'
+      - 'verdaccio-v5-permissions'
     user: verdaccio
     ports:
       - '4873:4873'
