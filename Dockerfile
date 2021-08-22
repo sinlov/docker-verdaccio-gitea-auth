@@ -11,7 +11,10 @@ FROM verdaccio/verdaccio:5.1.2
 
 USER root
 
-RUN npm i verdaccio-gitea-auth && \
- npm cache clean --force
+RUN yarn add verdaccio-gitea-auth && \
+  yarn install && \
+  yarn code:docker-build && \
+  yarn cache clean && \
+  yarn workspaces focus --production
 
 USER verdaccio

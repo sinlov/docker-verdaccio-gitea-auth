@@ -74,7 +74,11 @@ rmTestLatestAlpine:
 	-docker rm -f ${TEST_TAG_BUILD_CONTAINER_NAME}
 
 rmiTestLatestAlpine:
-	-docker rmi -f ${TEST_TAG_BUILD_IMAGE_NAME}:${ENV_DIST_VERSION}
+	-TEST_TAG_BUILD_CONTAINER_NAME=$(TEST_TAG_BUILD_CONTAINER_NAME) \
+	TEST_TAG_BUILD_IMAGE_NAME=$(TEST_TAG_BUILD_IMAGE_NAME) \
+	ROOT_DOCKER_IMAGE_TAG=$(ENV_DIST_VERSION) \
+	ENV_DIST_VERSION=${ENV_DIST_VERSION} \
+	docker rmi -f ${TEST_TAG_BUILD_IMAGE_NAME}:${ENV_DIST_VERSION}
 
 restartTestLatestAlpine: rmTestLatestAlpine rmiTestLatestAlpine buildTestLatestAlpine runTestLatestAlpine
 	@echo "restrat $(TEST_TAG_BUILD_CONTAINER_NAM{}"
@@ -101,13 +105,14 @@ exampleRun:
 	docker inspect --format='{{ .State.Status}}' $(TEST_TAG_BUILD_CONTAINER_NAME)
 
 exampleStop:
+	cd ${TEST_TAG_EXAMPLE_PATH} && \
 	TEST_TAG_BUILD_CONTAINER_NAME=$(TEST_TAG_BUILD_CONTAINER_NAME) \
 	TEST_TAG_BUILD_IMAGE_NAME=$(TEST_TAG_BUILD_IMAGE_NAME) \
 	ROOT_DOCKER_IMAGE_TAG=$(ENV_DIST_VERSION) \
 	ENV_DIST_VERSION=${ENV_DIST_VERSION} \
-	cd ${TEST_TAG_EXAMPLE_PATH} && docker-compose stop
+	docker-compose stop
 
-examplePrune: exampleStop rmiTestLatestAlpine rmiTestLatestAlpine
+examplePrune: exampleStop rmiTestLatestAlpine
 	@echo "stop and remove path $(TEST_TAG_EXAMPLE_PATH)"
 
 buildTag:
