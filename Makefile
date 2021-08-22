@@ -4,7 +4,7 @@ TOP_DIR := $(shell pwd)
 
 ENV_DIST_VERSION=latest
 
-ROOT_SWITCH_TAG := 4.12.2
+ROOT_SWITCH_TAG := 5.1.2
 ROOT_BUILD_OS := alpine
 
 ROOT_BUILD_FOLDER ?= build

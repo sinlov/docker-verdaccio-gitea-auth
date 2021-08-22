@@ -1,14 +1,14 @@
-name: Docker Image CI latest
+name: Docker Image CI alpine by tag
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    tags:
+      - '*' # Push events to matching *, i.e. 1.0.0 v1.0, v20.15.10
 
 env:
   # nmae of docker image
   DOCKER_HUB_USER: sinlov
+  IMAGE_BUILD_OS_PATH: alpine
   IMAGE_NAME: docker-verdaccio-gitea-auth
 
 jobs:
@@ -19,14 +19,18 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag $IMAGE_NAME
+      run: |
+        cd $IMAGE_BUILD_OS_PATH && docker build . --file Dockerfile --tag $IMAGE_NAME
     - name: Log into registry
       run: echo "${{ secrets.ACCESS_TOKEN }}" | docker login -u $DOCKER_HUB_USER --password-stdin
     - name: Push image
       run: |
+        # test now pwd
+        echo $PWD
+
         # parse docker image id
         IMAGE_ID=$DOCKER_HUB_USER/$IMAGE_NAME
-        # lower case all
+        # lower case allgit
         IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
         # ref get version
         VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
@@ -34,6 +38,8 @@ jobs:
         [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
         # Use Docker `latest` tag convention when get main
         [ "$VERSION" == "main" ] && VERSION=latest
+        # add docker build os
+        VERSION=$VERSION-${IMAGE_BUILD_OS_PATH}
 
         echo IMAGE_ID=$IMAGE_ID
         echo VERSION=$VERSION
