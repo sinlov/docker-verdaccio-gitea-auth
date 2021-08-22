@@ -13,6 +13,8 @@ ROOT_SCRIPT_FOLDER ?= dist
 ROOT_LOG_PATH ?= ./log
 ROOT_DIST ?= ./out
 
+TEST_BUILD_PARENT_IMAGE ?= verdaccio/verdaccio:5.1.2
+TEST_BUILD_PARENT_CONTAINNER ?= test-verdaccio-build
 TEST_TAG_BUILD_IMAGE_NAME ?= sinlov/docker-verdaccio-gitea-auth
 TEST_TAG_BUILD_CONTAINER_NAME ?= test-docker-verdaccio-gitea-auth
 TEST_TAG_EXAMPLE_PATH = example
@@ -43,6 +45,19 @@ dockerPruneAll:
 
 clean: cleanBuild cleanLog
 	@echo "~> clean finish"
+
+runContainerToTestBuild:
+	@echo "run rm container image: ${TEST_BUILD_PARENT_IMAGE}"
+	docker run -d --rm --name ${TEST_BUILD_PARENT_CONTAINNER} ${TEST_BUILD_PARENT_IMAGE}
+	@echo ""
+	@echo "run rm container name: ${TEST_BUILD_PARENT_CONTAINNER}"
+	@echo "into container use:  docker exec -it ${TEST_BUILD_PARENT_CONTAINNER} sh"
+
+rmContainerToTestBuild:
+	-docker rm -f ${TEST_BUILD_PARENT_CONTAINNER}
+
+pruneContainerToTestBuild: rmContainerToTestBuild
+	-docker rmi -f ${TEST_BUILD_PARENT_IMAGE}
 
 buildTestLatestAlpine: checkBuildPath
 	docker build --tag ${TEST_TAG_BUILD_IMAGE_NAME}:${ENV_DIST_VERSION} .
