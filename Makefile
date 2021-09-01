@@ -112,6 +112,14 @@ exampleStop:
 	ENV_DIST_VERSION=${ENV_DIST_VERSION} \
 	docker-compose stop
 
+exampleRm:
+	cd ${TEST_TAG_EXAMPLE_PATH} && \
+	TEST_TAG_BUILD_CONTAINER_NAME=$(TEST_TAG_BUILD_CONTAINER_NAME) \
+	TEST_TAG_BUILD_IMAGE_NAME=$(TEST_TAG_BUILD_IMAGE_NAME) \
+	ROOT_DOCKER_IMAGE_TAG=$(ENV_DIST_VERSION) \
+	ENV_DIST_VERSION=${ENV_DIST_VERSION} \
+	docker-compose rm
+
 examplePrune: exampleStop rmiTestLatestAlpine
 	@echo "stop and remove path $(TEST_TAG_EXAMPLE_PATH)"
 
