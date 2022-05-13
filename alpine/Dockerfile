@@ -7,7 +7,7 @@
 # maintainer="https://github.com/sinlov/docker-verdaccio-gitea-auth"
 
 # https://hub.docker.com/r/verdaccio/verdaccio/tags?page=1&ordering=last_updated
-FROM verdaccio/verdaccio:5.1.2
+FROM verdaccio/verdaccio:5.2.0
 
 USER root
 
