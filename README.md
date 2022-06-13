@@ -4,6 +4,8 @@
 [![docker version semver](https://img.shields.io/docker/v/sinlov/docker-verdaccio-gitea-auth?sort=semver)](https://hub.docker.com/r/sinlov/docker-verdaccio-gitea-auth/tags?page=1&ordering=last_updated)
 [![docker image size](https://img.shields.io/docker/image-size/sinlov/docker-verdaccio-gitea-auth)](https://hub.docker.com/r/sinlov/docker-verdaccio-gitea-auth)
 
+[![dockeri.co](https://dockeri.co/image/sinlov/docker-verdaccio-gitea-auth)](https://hub.docker.com/r/sinlov/docker-verdaccio-gitea-auth/tags)
+
 - docker hub see https://hub.docker.com/r/sinlov/docker-verdaccio-gitea-auth
 - this is fast way to run https://verdaccio.org/ and auth by https://gitea.io/
 
