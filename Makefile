@@ -4,7 +4,7 @@ TOP_DIR := $(shell pwd)
 
 ENV_DIST_VERSION=latest
 
-ROOT_SWITCH_TAG :=5.26.3
+ROOT_SWITCH_TAG :=5.27.1
 ROOT_BUILD_OS :=alpine
 
 ROOT_BUILD_FOLDER ?=build
@@ -13,7 +13,7 @@ ROOT_SCRIPT_FOLDER ?=dist
 ROOT_LOG_PATH ?=./log
 ROOT_DIST ?=./out
 
-TEST_BUILD_PARENT_IMAGE ?=verdaccio/verdaccio:5.26.3
+TEST_BUILD_PARENT_IMAGE ?=verdaccio/verdaccio:5.27.1
 TEST_BUILD_PARENT_CONTAINNER ?=test-verdaccio-build
 TEST_TAG_BUILD_IMAGE_NAME ?=sinlov/docker-verdaccio-gitea-auth
 TEST_TAG_BUILD_CONTAINER_NAME ?=test-docker-verdaccio-gitea-auth
