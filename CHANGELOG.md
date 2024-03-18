@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [convention-change-log](https://github.com/convention-change/convention-change-log) for commit guidelines.
 
+## [5.25.0](https://github.com/sinlov/docker-verdaccio-gitea-auth/compare/5.24.1...v5.25.0) (2024-03-18)
+
+### BREAKING CHANGE:
+
+* now remove yarn at total image
+
+### ✨ Features
+
+* change verdaccio version `5.25.0` ([b6ea14e4](https://github.com/sinlov/docker-verdaccio-gitea-auth/commit/b6ea14e4bb92256a6731e6fe4d0b10f87cbd4890))
+
 ## [5.24.1](https://github.com/sinlov/docker-verdaccio-gitea-auth/compare/5.23.2...v5.24.1) (2024-03-18)
 
 ### ✨ Features
