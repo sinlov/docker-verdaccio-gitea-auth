@@ -4,20 +4,20 @@ TOP_DIR := $(shell pwd)
 
 ENV_DIST_VERSION=latest
 
-ROOT_SWITCH_TAG := 5.1.2
-ROOT_BUILD_OS := alpine
+ROOT_SWITCH_TAG :=5.20.1
+ROOT_BUILD_OS :=alpine
 
-ROOT_BUILD_FOLDER ?= build
-ROOT_BUILD_PATH ?= ./${ROOT_BUILD_FOLDER}
-ROOT_SCRIPT_FOLDER ?= dist
-ROOT_LOG_PATH ?= ./log
-ROOT_DIST ?= ./out
+ROOT_BUILD_FOLDER ?=build
+ROOT_BUILD_PATH ?=${ROOT_BUILD_FOLDER}
+ROOT_SCRIPT_FOLDER ?=dist
+ROOT_LOG_PATH ?=./log
+ROOT_DIST ?=./out
 
-TEST_BUILD_PARENT_IMAGE ?= verdaccio/verdaccio:5.1.2
-TEST_BUILD_PARENT_CONTAINNER ?= test-verdaccio-build
-TEST_TAG_BUILD_IMAGE_NAME ?= sinlov/docker-verdaccio-gitea-auth
-TEST_TAG_BUILD_CONTAINER_NAME ?= test-docker-verdaccio-gitea-auth
-TEST_TAG_EXAMPLE_PATH = example
+TEST_BUILD_PARENT_IMAGE ?=verdaccio/verdaccio:5.20.1
+TEST_BUILD_PARENT_CONTAINNER ?=test-verdaccio-build
+TEST_TAG_BUILD_IMAGE_NAME ?=sinlov/docker-verdaccio-gitea-auth
+TEST_TAG_BUILD_CONTAINER_NAME ?=test-docker-verdaccio-gitea-auth
+TEST_TAG_EXAMPLE_PATH =example
 
 all: buildLatestAlpine
 
@@ -28,13 +28,16 @@ checkDistPath:
 	@if [ ! -d ${ROOT_DIST} ]; then mkdir -p ${ROOT_DIST} && echo "~> mkdir ${ROOT_DIST}"; fi
 
 cleanBuild:
-	@if [ -d ${ROOT_BUILD_PATH} ]; then rm -rf ${ROOT_BUILD_PATH} && echo "~> cleaned ${ROOT_BUILD_PATH}"; else echo "~> has cleaned ${ROOT_BUILD_PATH}"; fi
+	@$(RM) -r ${ROOT_BUILD_PATH}
+	@echo "~> finish clean path ${${ROOT_BUILD_PATH}}"
 
 cleanLog:
-	@if [ -d ${ROOT_LOG_PATH} ]; then rm -rf ${ROOT_LOG_PATH} && echo "~> cleaned ${ROOT_LOG_PATH}"; else echo "~> has cleaned ${ROOT_LOG_PATH}"; fi
+	@$(RM) -r ${ROOT_LOG_PATH}
+	@echo "~> finish clean path ${${ROOT_LOG_PATH}}"
 
 cleanDist:
-	@if [ -d ${ROOT_DIST} ]; then rm -rf ${ROOT_DIST} && echo "~> cleaned ${ROOT_DIST}"; else echo "~> has cleaned ${ROOT_DIST}"; fi
+	@$(RM) -r ${ROOT_DIST}
+	@echo "~> finish clean path ${${ROOT_DIST}}"
 
 dockerCleanImages:
 	(while :; do echo 'y'; sleep 3; done) | docker image prune

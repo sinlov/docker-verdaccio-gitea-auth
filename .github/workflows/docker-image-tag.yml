@@ -2,22 +2,16 @@
 # - DOCKERHUB_OWNER
 # - DOCKERHUB_REPO_NAME
 # - DOCKERHUB_TOKEN
-# most use as github.event.pull_request.merged == true
-name: docker-image-latest
+name: docker-image-tag
 
 on:
   workflow_call: # https://docs.github.com/actions/using-workflows/reusing-workflows#using-inputs-and-secrets-in-a-reusable-workflow
     inputs:
       push_remote_flag:
         description: 'flag for push to remote'
-        default: false
+        default: true
         required: false
         type: boolean
-      build_branch_name:
-        description: 'name of branch for build default is main'
-        default: 'main'
-        required: false
-        type: string
     secrets:
       DOCKERHUB_OWNER:
         description: 'docker hub owner'
@@ -40,8 +34,8 @@ jobs:
         os: [ ubuntu-latest ]
         docker_image: # change this for build dry-run
           - platform: linux/amd64
-          # - platform: linux/386
           - platform: linux/arm64/v8
+          # - platform: linux/386
           # - platform: linux/arm/v7
     runs-on: ${{ matrix.os }}
     steps:
@@ -54,8 +48,8 @@ jobs:
         with:
           images: ${{ secrets.DOCKERHUB_OWNER }}/${{ secrets.DOCKERHUB_REPO_NAME }}
           tags: |
-            # set latest tag for main branch https://github.com/docker/metadata-action#latest-tag
-            type=raw,value=latest,enable=true
+            # type semver https://github.com/docker/metadata-action#typesemver
+            type=semver,pattern={{version}}
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -93,12 +87,12 @@ jobs:
           images: ${{ secrets.DOCKERHUB_OWNER }}/${{ secrets.DOCKERHUB_REPO_NAME }}
           tags: |
             # type semver https://github.com/docker/metadata-action#typesemver
-            type=raw,value=latest,enable=true
+            type=semver,pattern={{version}}
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v3
       -
-        name: "Login into registry as user"
+        name: "Login into registry as user: inputs.docker_hub_user"
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_OWNER }}
