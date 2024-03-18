@@ -42,9 +42,12 @@ docker run -d --rm \
 #
 # Look here for more config file examples:
 # https://verdaccio.org/docs/en/best
-# path to a directory with all packages
 
-storage: /verdaccio/storage
+# path to a directory with all packages
+storage: /verdaccio/storage/data
+
+# path to a directory with plugins to include
+plugins: /verdaccio/plugins
 
 auth:
   # https://verdaccio.org/docs/en/plugin-auth
@@ -60,7 +63,7 @@ auth:
     #max_users: 1000
 
 # log settings
-logs:
+log:
   - { type: stdout, format: pretty, level: trace }
   #- {type: file, path: verdaccio.log, level: info}
 ```
@@ -75,7 +78,7 @@ logs:
 # copy right
 # Licenses http://www.apache.org/licenses/LICENSE-2.0
 # more info see https://docs.docker.com/compose/compose-file/ or https://docker.github.io/compose/compose-file/
-version: '3.7'
+version: '3.8'
 networks:
   default:
 services:
@@ -130,4 +133,4 @@ docker-compose up -d
 
 now only support `v5`
 
-- change verdaccio version `5.28.0`
+- change verdaccio version `5.29.2`
