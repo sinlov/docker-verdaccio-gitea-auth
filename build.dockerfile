@@ -7,7 +7,7 @@
 # maintainer="https://github.com/sinlov/docker-verdaccio-gitea-auth"
 
 # https://github.com/verdaccio/verdaccio/blob/v5.22.1/Dockerfile
-FROM --platform=${BUILDPLATFORM:-linux/amd64} node:18.13.0-alpine as builder
+FROM --platform=${BUILDPLATFORM:-linux/amd64} node:18.14.0-alpine as builder
 
 ARG VERDACCIO_DIST_VERSION=5.22.1
 
@@ -33,9 +33,9 @@ RUN git clone https://github.com/verdaccio/verdaccio.git --depth=1 -b v${VERDACC
 RUN yarn config set npmRegistryServer $VERDACCIO_BUILD_REGISTRY && \
     yarn config set enableProgressBars true && \
     yarn config set enableScripts false && \
-    yarn install && \
+    yarn install --immutable && \
     yarn add verdaccio-gitea-auth && \
-    yarn code:docker-build
+    yarn build
 ## pack the project
 RUN yarn pack --out verdaccio.tgz \
     && mkdir -p /opt/tarball \
@@ -43,7 +43,7 @@ RUN yarn pack --out verdaccio.tgz \
 ## clean up and reduce bundle size
 RUN rm -Rf /opt/verdaccio-build
 
-FROM node:18.13.0-alpine
+FROM node:18.14.0-alpine
 LABEL maintainer="https://github.com/sinlov/docker-verdaccio-gitea-auth"
 
 ENV VERDACCIO_APPDIR=/opt/verdaccio \
