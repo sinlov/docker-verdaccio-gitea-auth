@@ -122,3 +122,12 @@ docker-compose up -d
 - login as
   - user    `gitea user`
   - passwod `Access Tokens`
+
+
+## dev
+
+### change version
+
+now only support `v5`
+
+- change verdaccio version `5.21.2`
