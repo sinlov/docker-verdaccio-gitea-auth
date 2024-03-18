@@ -1,8 +1,13 @@
+[![ci](https://github.com/sinlov/docker-verdaccio-gitea-auth/actions/workflows/ci.yml/badge.svg)](https://github.com/sinlov/docker-verdaccio-gitea-auth/actions/workflows/ci.yml)
+[![GitHub license](https://img.shields.io/github/license/sinlov/docker-verdaccio-gitea-auth)](https://github.com/sinlov/docker-verdaccio-gitea-auth)
+[![GitHub latest SemVer tag)](https://img.shields.io/github/v/tag/sinlov/docker-verdaccio-gitea-auth)](https://github.com/sinlov/docker-verdaccio-gitea-auth/tags)
+[![GitHub release)](https://img.shields.io/github/v/release/sinlov/docker-verdaccio-gitea-auth)](https://github.com/sinlov/docker-verdaccio-gitea-auth/releases)
+
 # docker-verdaccio-gitea-auth
 
-![docker version semver](https://img.shields.io/docker/v/sinlov/docker-verdaccio-gitea-auth?sort=semver)
-[![docker image size](https://img.shields.io/docker/image-size/sinlov/docker-verdaccio-gitea-auth)](https://hub.docker.com/r/sinlov/docker-verdaccio-gitea-auth)
-[![docker pulls](https://img.shields.io/docker/pulls/sinlov/docker-verdaccio-gitea-auth)](https://hub.docker.com/r/sinlov/docker-verdaccio-gitea-auth/tags?page=1&ordering=last_updated)
+[![docker hub version semver](https://img.shields.io/docker/v/sinlov/docker-verdaccio-gitea-auth?sort=semver)](https://hub.docker.com/r/sinlov/docker-verdaccio-gitea-auth/tags?page=1&ordering=last_updated)
+[![docker hub image size](https://img.shields.io/docker/image-size/sinlov/docker-verdaccio-gitea-auth)](https://hub.docker.com/r/sinlov/docker-verdaccio-gitea-auth)
+[![docker hub image pulls](https://img.shields.io/docker/pulls/sinlov/docker-verdaccio-gitea-auth)](https://hub.docker.com/r/sinlov/docker-verdaccio-gitea-auth/tags?page=1&ordering=last_updated)
 
 - docker hub see https://hub.docker.com/r/sinlov/docker-verdaccio-gitea-auth
 - this is fast way to run https://verdaccio.org/ and auth by https://gitea.io/
