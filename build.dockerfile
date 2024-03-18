@@ -6,10 +6,10 @@
 
 # maintainer="https://github.com/sinlov/docker-verdaccio-gitea-auth"
 
-# https://github.com/verdaccio/verdaccio/blob/v5.24.1/Dockerfile
+# https://github.com/verdaccio/verdaccio/blob/v5.25.0/Dockerfile
 FROM --platform=${BUILDPLATFORM:-linux/amd64} node:18.16.0-alpine as builder
 
-ARG VERDACCIO_DIST_VERSION=5.24.1
+ARG VERDACCIO_DIST_VERSION=5.25.0
 
 ENV NODE_ENV=production \
     VERDACCIO_BUILD_REGISTRY=https://registry.npmjs.org  \
@@ -72,7 +72,8 @@ RUN npm install -g $VERDACCIO_APPDIR/verdaccio.tgz \
     && rm -Rf .npm/ \
     && rm $VERDACCIO_APPDIR/verdaccio.tgz \
     # yarn is not need it after this step
-    && rm -Rf /opt/yarn-v1.22.19/
+    # Also remove the symlinks added in the [`node:alpine` Docker image](https://github.com/nodejs/docker-node/blob/02a64a08a98a472c6141cd583d2e9fc47bcd9bfd/18/alpine3.16/Dockerfile#L91-L92).
+    && rm -Rf /opt/yarn-v1.22.19/ /usr/local/bin/yarn /usr/local/bin/yarnpkg
 
 ADD conf/docker.yaml /verdaccio/conf/config.yaml
 ADD docker-bin $VERDACCIO_APPDIR/docker-bin
