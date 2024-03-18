@@ -2,6 +2,20 @@
 
 All notable changes to this project will be documented in this file. See [convention-change-log](https://github.com/convention-change/convention-change-log) for commit guidelines.
 
+## [5.22.1](https://github.com/sinlov/docker-verdaccio-gitea-auth/compare/5.21.2...v5.22.1) (2024-03-18)
+
+### BREAKING CHANGE:
+
+* Since v5.22.0 the logger property is renamed from logs to log, it is still backward
+
+### ✨ Features
+
+* try new version of v5.22.1 ([2b793cbd](https://github.com/sinlov/docker-verdaccio-gitea-auth/commit/2b793cbdc7517c4517496b7d86d956501ab067e3))
+
+### 👷‍ Build System
+
+* let build with docker run success ([bc9cc598](https://github.com/sinlov/docker-verdaccio-gitea-auth/commit/bc9cc5983f16f1c6b128fa993d399af99c716299))
+
 ## [5.21.2](https://github.com/sinlov/docker-verdaccio-gitea-auth/compare/5.20.1...v5.21.2) (2024-03-18)
 
 ### ✨ Features
