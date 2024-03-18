@@ -6,10 +6,10 @@
 
 # maintainer="https://github.com/sinlov/docker-verdaccio-gitea-auth"
 
-# https://github.com/verdaccio/verdaccio/blob/v5.22.1/Dockerfile
-FROM --platform=${BUILDPLATFORM:-linux/amd64} node:18.14.0-alpine as builder
+# https://github.com/verdaccio/verdaccio/blob/v5.23.2/Dockerfile
+FROM --platform=${BUILDPLATFORM:-linux/amd64} node:18.15.0-alpine as builder
 
-ARG VERDACCIO_DIST_VERSION=5.22.1
+ARG VERDACCIO_DIST_VERSION=5.23.2
 
 ENV NODE_ENV=production \
     VERDACCIO_BUILD_REGISTRY=https://registry.npmjs.org  \
@@ -43,7 +43,7 @@ RUN yarn pack --out verdaccio.tgz \
 ## clean up and reduce bundle size
 RUN rm -Rf /opt/verdaccio-build
 
-FROM node:18.14.0-alpine
+FROM node:18.15.0-alpine
 LABEL maintainer="https://github.com/sinlov/docker-verdaccio-gitea-auth"
 
 ENV VERDACCIO_APPDIR=/opt/verdaccio \
