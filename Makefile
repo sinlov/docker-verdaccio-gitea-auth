@@ -51,7 +51,9 @@ clean: cleanBuild cleanLog
 
 runContainerToTestBuild:
 	@echo "run rm container image: ${TEST_BUILD_PARENT_IMAGE}"
-	docker run -d --rm --name ${TEST_BUILD_PARENT_CONTAINNER} ${TEST_BUILD_PARENT_IMAGE}
+	docker run -d --rm --name ${TEST_BUILD_PARENT_CONTAINNER} \
+	--user root \
+	${TEST_BUILD_PARENT_IMAGE}
 	@echo ""
 	@echo "run rm container name: ${TEST_BUILD_PARENT_CONTAINNER}"
 	@echo "into container use:  docker exec -it ${TEST_BUILD_PARENT_CONTAINNER} sh"
