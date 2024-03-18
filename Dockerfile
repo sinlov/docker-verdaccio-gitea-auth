@@ -26,7 +26,7 @@ RUN apk add --force-overwrite && \
 
 WORKDIR /opt/verdaccio-build
 
-RUN git clone https://github.com/verdaccio/verdaccio.git --depth=1 v${VERDACCIO_DIST_VERSION} /opt/verdaccio-build
+RUN git clone https://github.com/verdaccio/verdaccio.git --depth=1 -b v${VERDACCIO_DIST_VERSION} /opt/verdaccio-build
 
 ## build the project and create a tarball of the project for later
 ## global installation
