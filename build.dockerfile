@@ -6,10 +6,10 @@
 
 # maintainer="https://github.com/sinlov/docker-verdaccio-gitea-auth"
 
-# https://github.com/verdaccio/verdaccio/blob/v5.21.2/Dockerfile
+# https://github.com/verdaccio/verdaccio/blob/v5.22.1/Dockerfile
 FROM --platform=${BUILDPLATFORM:-linux/amd64} node:18.13.0-alpine as builder
 
-ARG VERDACCIO_DIST_VERSION=5.21.2
+ARG VERDACCIO_DIST_VERSION=5.22.1
 
 ENV NODE_ENV=production \
     VERDACCIO_BUILD_REGISTRY=https://registry.npmjs.org  \
