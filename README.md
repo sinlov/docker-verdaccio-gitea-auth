@@ -145,7 +145,7 @@ docker-compose up -d
 
 now only support verdaccio `v5.x`
 
-- change verdaccio version `5.29.2`
+- change verdaccio version `5.30.3`
 
 ## Contributing
 
