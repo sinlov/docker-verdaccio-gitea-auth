@@ -12,18 +12,21 @@
 [![docker hub image pulls](https://img.shields.io/docker/pulls/sinlov/docker-verdaccio-gitea-auth)](https://hub.docker.com/r/sinlov/docker-verdaccio-gitea-auth/tags?page=1&ordering=last_updated)
 
 - docker hub see https://hub.docker.com/r/sinlov/docker-verdaccio-gitea-auth
-- this is fast way to run https://verdaccio.org/ and auth by https://gitea.io/
 
-## fast use
+## Features
 
-```sh
-docker run -d --rm \
-  --name verdaccio-gitea-auth \
-  -p 4873:4873 \
-  sinlov/docker-verdaccio-gitea-auth:latest
-```
+- this is fast way to run https://verdaccio.org/ and auth by https://gitea.io/ or self-hosted gitea server.
+- add healthy check plugin [verdaccio-hello](https://github.com/bruceman/verdaccio-hello) (image version 5.30+)
 
-> WARN: this way not load config and gitea-auth, only test for run container.
+### Migration
+
+#### Migration v5 to v6
+
+from release note [6.0.0](https://github.com/verdaccio/verdaccio/releases/tag/v6.0.0)
+
+> Update notes, no considerable changes on this major release, for npm.js users only dropping Node.js, 14 and 16 support, minimum now is Node.js 18 and no changes for Docker users.
+
+please update to version [5.32.2](https://github.com/verdaccio/verdaccio/releases/tag/v5.32.2) (2024-09-12) before upgrade.
 
 ## devops docker-compose
 
@@ -143,11 +146,11 @@ docker-compose up -d
 
 ### change version
 
-now only support verdaccio `v5.x`
+now support verdaccio `v6.x` `v5.x`
 
-- change verdaccio version `5.32.2`
+- change verdaccio version `6.0.1`
     - glibc `2.35-r0`
-    - node version `20.16.0`
+    - node version `20.18.0`
     - yarn version `yarn-v1.22.19`
 
 ## Contributing
