@@ -5,7 +5,7 @@ on:
     paths-ignore:
       - '**/README.md'
     branches:
-      - 'main'
+      # - 'main'
       - 'release-*'
       - 'FE-*'
       - '*-feature-*'
@@ -15,6 +15,7 @@ on:
       - 'DOC-*'
       - '*-documentation-*'
       - '*-hotfix-*'
+      - 'fix-*'
     tags:
       - '*' # Push events to matching *, i.e. 1.0.0 v1.0, v20.15.10
   pull_request:
@@ -30,9 +31,10 @@ on:
     #   - 'DOC-*'
     #   - 'hotfix-*'
 
-permissions:
+permissions: # https://docs.github.com/actions/using-workflows/workflow-syntax-for-github-actions#permissions
   contents: write
   discussions: write
+  packages: write
 
 jobs:
   version:
