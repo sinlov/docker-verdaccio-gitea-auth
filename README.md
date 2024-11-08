@@ -51,6 +51,11 @@ storage: /verdaccio/storage/data
 # path to a directory with plugins to include
 plugins: /verdaccio/plugins
 
+middlewares:
+  hello:
+    path: /hello # optional, default value is /hello
+    text: ok # optional, default value is ok
+
 auth:
   # https://verdaccio.org/docs/en/plugin-auth
   gitea-auth:

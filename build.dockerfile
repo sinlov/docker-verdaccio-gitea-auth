@@ -35,6 +35,7 @@ RUN yarn config set npmRegistryServer $VERDACCIO_BUILD_REGISTRY && \
     yarn config set enableScripts false && \
     yarn install --immutable && \
     yarn add verdaccio-gitea-auth && \
+    yarn add verdaccio-hello && \
     yarn build
 ## pack the project
 RUN yarn pack --out verdaccio.tgz \
