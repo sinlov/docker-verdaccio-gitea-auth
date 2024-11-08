@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file. See [convention-change-log](https://github.com/convention-change/convention-change-log) for commit guidelines.
 
+## [5.31.1](https://github.com/sinlov/docker-verdaccio-gitea-auth/compare/5.30.3...v5.31.1) (2024-11-08)
+
+### ✨ Features
+
+* update Verdaccio to v5.31.1 and Node.js to v20.14.0 ([efde406a](https://github.com/sinlov/docker-verdaccio-gitea-auth/commit/efde406aeec22cb6bfb54dc7d780cb393d0d810e)), feat [#5](https://github.com/sinlov/docker-verdaccio-gitea-auth/issues/5)
+
 ## [5.30.3](https://github.com/sinlov/docker-verdaccio-gitea-auth/compare/5.29.2...v5.30.3) (2024-11-08)
 
 ### ✨ Features
