@@ -2,7 +2,8 @@
 
 *.log
 build/
-example/
+example/data/
+slim.report.json
 
 # Created by .ignore support plugin (hsz.mobi)
 ### Linux template

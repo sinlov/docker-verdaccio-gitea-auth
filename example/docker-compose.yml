@@ -1,0 +1,31 @@
+# copy right
+# Licenses http://www.apache.org/licenses/LICENSE-2.0
+# more info see https://docs.docker.com/compose/compose-file/ or https://docker.github.io/compose/compose-file/
+# version: '3.7'
+networks:
+  default:
+services:
+  # https://hub.docker.com/r/verdaccio/verdaccio v5
+  test-docker-verdaccio-gitea-auth-permissions:
+    container_name: test-docker-verdaccio-gitea-auth-permissions
+    image: sinlov/docker-verdaccio-gitea-auth:${ROOT_DOCKER_IMAGE_TAG} # https://hub.docker.com/r/sinlov/docker-verdaccio-gitea-auth/tags?page=1&ordering=last_updated
+    user: root
+    command: "chown -R verdaccio: /verdaccio/"
+    volumes:
+      - './verdaccio/conf:/verdaccio/conf'
+      - './data/verdaccio/storage:/verdaccio/storage'
+      - './data/verdaccio/plugins:/verdaccio/plugins' # use plugins
+  # https://hub.docker.com/r/verdaccio/verdaccio v5
+  test-docker-verdaccio-gitea-auth:
+    container_name: 'test-docker-verdaccio-gitea-auth'
+    image: sinlov/docker-verdaccio-gitea-auth:${ROOT_DOCKER_IMAGE_TAG} # https://hub.docker.com/r/sinlov/docker-verdaccio-gitea-auth/tags?page=1&ordering=last_updated
+    depends_on:
+      - test-docker-verdaccio-gitea-auth-permissions
+    user: verdaccio
+    ports:
+      - '4873:4873'
+    volumes:
+      - './verdaccio/conf:/verdaccio/conf'
+      - './data/verdaccio/storage:/verdaccio/storage'
+      - './data/verdaccio/plugins:/verdaccio/plugins' # use plugins
+    restart: on-failure:3 # on-failure:3 or unless-stopped always default no

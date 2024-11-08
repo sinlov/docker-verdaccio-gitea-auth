@@ -7,7 +7,8 @@
 # maintainer="https://github.com/sinlov/docker-verdaccio-gitea-auth"
 
 # https://github.com/verdaccio/verdaccio/blob/v5.29.2/Dockerfile
-FROM --platform=${BUILDPLATFORM:-linux/amd64} node:20.11.0-alpine as builder
+# FROM --platform=${BUILDPLATFORM:-linux/amd64} node:20.11.0-alpine as builder
+FROM node:20.11.0-alpine as builder
 
 ARG VERDACCIO_DIST_VERSION=5.29.2
 
