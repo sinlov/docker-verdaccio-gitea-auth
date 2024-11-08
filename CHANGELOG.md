@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [convention-change-log](https://github.com/convention-change/convention-change-log) for commit guidelines.
 
+## [5.30.3](https://github.com/sinlov/docker-verdaccio-gitea-auth/compare/5.29.2...v5.30.3) (2024-11-08)
+
+### ✨ Features
+
+* add verdaccio-hello plugin from https://github.com/bruceman/verdaccio-hello ([db02e8be](https://github.com/sinlov/docker-verdaccio-gitea-auth/commit/db02e8bee493f351322ecc106f5f09f80de9e8d7))
+
+### 📝 Documentation
+
+* update configuration and source repo details ([4471ac3f](https://github.com/sinlov/docker-verdaccio-gitea-auth/commit/4471ac3ffff53b16ecc4211ce5a9ee1d02b37a97))
+
+* add contributing guidelines and code of conduct ([37a4ae7b](https://github.com/sinlov/docker-verdaccio-gitea-auth/commit/37a4ae7bcf18a7fe39336b7155ff6a391ea7c7aa))
+
+### 👷‍ Build System
+
+* upgrade verdaccio version to 5.30.3 ([4b784e92](https://github.com/sinlov/docker-verdaccio-gitea-auth/commit/4b784e921ee3ba8a093b94abc5bfed9ddff1e4a5)), feat [#3](https://github.com/sinlov/docker-verdaccio-gitea-auth/issues/3)
+
 ## [5.29.2](https://github.com/sinlov/docker-verdaccio-gitea-auth/compare/5.28.0...v5.29.2) (2024-03-19)
 
 ### ✨ Features
