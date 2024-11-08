@@ -39,7 +39,7 @@ auth:
 middlewares:
   audit:
     enabled: true
-  hello:
+  hello: # image 5.30+ support healthy check by: curl https://verdaccio.xxx/hello
     path: /hello # optional, default value is /hello
     text: ok # optional, default value is ok
 

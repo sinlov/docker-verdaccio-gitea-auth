@@ -13,6 +13,12 @@
 
 storage: /verdaccio/storage
 
+# path to a directory with plugins to include
+plugins: /verdaccio/plugins
+
+# https://verdaccio.org/docs/configuration/#max-body-size
+max_body_size: 300mb
+
 auth:
   # https://verdaccio.org/docs/en/plugin-auth
   gitea-auth:
@@ -25,6 +31,7 @@ auth:
     # Maximum amount of users allowed to register, defaults to "+inf".
     # You can set this to -1 to disable registration.
     #max_users: 1000
+
 security:
   api:
     jwt:
@@ -34,6 +41,45 @@ security:
   web:
     sign:
       expiresIn: 7d
+
+## Adit
+# To use `npm audit` uncomment the following section
+# Since: `verdaccio@3.0.0`
+# npm audit is a new command released with npm 6.x. Verdaccio includes a built-in middleware plugin to handle this command.
+middlewares:
+  audit:
+    enabled: true
+  hello: # image 5.30+ support healthy check by: curl https://verdaccio.xxx/hello
+    path: /hello # optional, default value is /hello
+    text: ok # optional, default value is ok
+
+# log settings
+log:
+  - { type: stdout, format: pretty, level: trace }
+  #- {type: file, path: verdaccio.log, level: info}
+
+# Since: [verdaccio@5.4.0](https://github.com/verdaccio/verdaccio/releases/tag/v5.4.0)
+# Add default rate limit to user endpoints, npm token, npm profile, npm loding/adduser and login website to 100 request peer 15 min
+userRateLimit:
+  windowMs: 50000
+  max: 100
+
+web:
+  # WebUI is enabled as default, if you want disable it, just uncomment this line
+  enable: true
+  title: npm for sinlov
+  # logo:
+  # comment out to disable gravatar support
+  gravatar: true
+  # by default packages are ordercer ascendant (asc|desc)
+  # sort_packages: asc  # 包的排序
+  # darkMode: true # 黑暗模式
+  # scope: "@scope"
+
+# translate your registry, api i18n not available yet
+i18n:
+# list of the available translations https://github.com/verdaccio/ui/tree/master/i18n/translations
+  web: en-US # 默认是en-US, 可改为中文 zh-CN
 
 # a list of other known repositories we can talk to
 uplinks:
@@ -87,13 +133,3 @@ packages:
       - npmjs
       - yarn
       - taobao
-
-# To use `npm audit` uncomment the following section
-middlewares:
-  audit:
-    enabled: true
-
-# log settings
-logs:
-  - { type: stdout, format: pretty, level: trace }
-  #- {type: file, path: verdaccio.log, level: info}

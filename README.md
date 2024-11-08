@@ -14,10 +14,6 @@
 - docker hub see https://hub.docker.com/r/sinlov/docker-verdaccio-gitea-auth
 - this is fast way to run https://verdaccio.org/ and auth by https://gitea.io/
 
-## source repo
-
-[https://github.com/sinlov/docker-verdaccio-gitea-auth](https://github.com/sinlov/docker-verdaccio-gitea-auth)
-
 ## fast use
 
 ```sh
@@ -33,7 +29,7 @@ docker run -d --rm \
 
 ### verdaccio app config.yaml
 
-- new config at `./data/verdaccio/conf/config.yaml` full config see [app/config/config.yaml](app/config/config.yaml)
+- new config at `./verdaccio/conf/config.yaml` full config see [app/config/config.yaml](app/config/config.yaml)
 
 ```yml
 # This is the config file used for the docker images.
@@ -71,7 +67,7 @@ auth:
 middlewares:
   audit:
     enabled: true
-  hello:
+  hello: # image 5.30+ support healthy check by: curl https://verdaccio.xxx/hello
     path: /hello # optional, default value is /hello
     text: ok # optional, default value is ok
 
@@ -102,7 +98,7 @@ services:
     user: root
     command: "chown -R verdaccio: /verdaccio/"
     volumes:
-      - './data/verdaccio/conf:/verdaccio/conf'
+      - './verdaccio/conf:/verdaccio/conf'
       - './data/verdaccio/storage:/verdaccio/storage'
       - './data/verdaccio/plugins:/verdaccio/plugins' # use plugins
   # https://hub.docker.com/r/sinlov/docker-verdaccio-gitea-auth
@@ -115,7 +111,7 @@ services:
     ports:
       - '4873:4873'
     volumes:
-      - './data/verdaccio/conf:/verdaccio/conf'
+      - './verdaccio/conf:/verdaccio/conf'
       - './data/verdaccio/storage:/verdaccio/storage'
       - './data/verdaccio/plugins:/verdaccio/plugins' # use plugins
     restart: on-failure:3 # on-failure:3 or unless-stopped always default "no"
@@ -139,6 +135,9 @@ docker-compose up -d
   - user    `gitea user`
   - password `Access Tokens`
 
+## source repo
+
+[https://github.com/sinlov/docker-verdaccio-gitea-auth](https://github.com/sinlov/docker-verdaccio-gitea-auth)
 
 ## dev
 
