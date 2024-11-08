@@ -64,6 +64,17 @@ auth:
     # You can set this to -1 to disable registration.
     #max_users: 1000
 
+## Adit
+# To use `npm audit` uncomment the following section
+# Since: `verdaccio@3.0.0`
+# npm audit is a new command released with npm 6.x. Verdaccio includes a built-in middleware plugin to handle this command.
+middlewares:
+  audit:
+    enabled: true
+  hello:
+    path: /hello # optional, default value is /hello
+    text: ok # optional, default value is ok
+
 # log settings
 log:
   - { type: stdout, format: pretty, level: trace }

@@ -41,47 +41,46 @@ jobs:
     name: version
     uses: ./.github/workflows/version.yml
 
-
-  docker-image-latest:
-    name: docker-image-latest
+  docker-bake-basic-all-latest:
+    name: docker-bake-basic-all-latest
     needs:
       - version
-    uses: ./.github/workflows/docker-image-latest.yml
-    if: ${{ ( github.event_name == 'push' && github.ref == 'refs/heads/main' ) || ( github.base_ref == 'main' && github.event.pull_request.merged == true ) }}
+    uses: ./.github/workflows/docker-buildx-bake-hubdocker-latest.yml
+    if: ${{ github.ref_type != 'tag' }}
     with:
-      # build_branch_name: 'main'
-      # push_remote_flag: ${{ github.event.pull_request.merged == true }}
-      push_remote_flag: ${{ github.ref == 'refs/heads/main' }}
+      # push_remote_flag: ${{ github.ref == 'refs/heads/main' }}
+      push_remote_flag: ${{ github.event.pull_request.merged == true }}
+      docker_bake_targets: 'image-basic'
     secrets:
-      DOCKERHUB_OWNER: "${{ secrets.DOCKERHUB_OWNER }}"
-      DOCKERHUB_REPO_NAME: "${{ secrets.DOCKERHUB_REPO_NAME }}"
       DOCKERHUB_TOKEN: "${{ secrets.DOCKERHUB_TOKEN }}"
 
+  ### deploy tag start
 
-  docker-image-tag:
-    name: docker-image-tag
+  docker-bake-basic-all-tag:
+    name: docker-bake-basic-all-tag
     needs:
       - version
-    uses: ./.github/workflows/docker-image-tag.yml
+    uses: ./.github/workflows/docker-buildx-bake-hubdocker-tag.yml
     if: startsWith(github.ref, 'refs/tags/')
-    # with:
-      # push_remote_flag: false
+    with:
+      docker_bake_targets: 'image-basic'
+      docker-metadata-flavor-suffix: '' # default is '', can add as: -alpine -debian
+      # push_remote_flag: true # default is true
     secrets:
-      DOCKERHUB_OWNER: "${{ secrets.DOCKERHUB_OWNER }}"
-      DOCKERHUB_REPO_NAME: "${{ secrets.DOCKERHUB_REPO_NAME }}"
       DOCKERHUB_TOKEN: "${{ secrets.DOCKERHUB_TOKEN }}"
 
   deploy-tag:
     needs:
       - version
-      - docker-image-tag
+      - docker-bake-basic-all-tag
     name: deploy-tag
     uses: ./.github/workflows/deploy-tag.yml
     if: startsWith(github.ref, 'refs/tags/')
     secrets: inherit
     with:
-      dry_run: false # open/close dry run
       prerelease: true
       tag_name: ${{ needs.version.outputs.tag_name }}
       tag_changes: ${{ needs.version.outputs.cc_changes }}
       # download_artifact_name: foo-release # download artifact name, download from actions/upload-artifact, as: {download_artifact_name}-{tag_name}-*, empty is not download
+
+ ### deploy tag end

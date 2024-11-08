@@ -46,22 +46,55 @@ jobs:
       cc_status: ${{ steps.check-version.outputs.cc-latest-status }}
 
     steps:
+
+      - name: check github context
+        run: |
+          echo "github.run_id: ${{ github.run_id }}"
+          echo "github.run_number: ${{ github.run_number }}"
+          echo "github.run_attempt: ${{ github.run_attempt }}"
+          echo "github.actor_id: ${{ github.actor_id }}"
+          echo ""
+          echo "github.workflow: ${{ github.workflow }}"
+          echo "github.workflow_ref: ${{ github.workflow_ref }}"
+          echo "github.workspace: ${{ github.workspace }}"
+          echo "github.job: ${{ github.job }}"
+          echo ""
+          echo "runner.os: ${{ runner.os }}"
+          echo "runner.arch: ${{ runner.arch }}"
+          echo "runner.temp: ${{ runner.temp }}"
+          echo ""
+          echo " GITHUB_EVENT_NAME ${GITHUB_EVENT_NAME}"
+          echo " github.event_name ${{ github.event_name }}"
+          echo " GITHUB_SHA ${GITHUB_SHA}"
+          echo " GITHUB_REF_TYPE ${GITHUB_REF_TYPE}"
+          echo " github.ref_type ${{ github.ref_type }}"
+          echo " GITHUB_REF ${GITHUB_REF}"
+          echo " github.ref ${{ github.ref }}"
+          echo " GITHUB_REF_NAME ${GITHUB_REF_NAME}"
+          echo " github.ref_name ${{ github.ref_name }}"
+          echo " GITHUB_BASE_REF ${GITHUB_BASE_REF}"
+          echo " github.base_ref ${{ github.base_ref }}"
+          echo " GITHUB_HEAD_REF ${GITHUB_HEAD_REF}"
+          echo " github.head_ref ${{ github.head_ref }}"
+          echo ""
+
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: get version and conventional
         id: check-version
-        uses: convention-change/conventional-version-check@v1.2.0 # or change to latest version
+        uses: convention-change/conventional-version-check@v1.4.0 # or change to latest version
         with:
           sha-length: 8
 
       - name: check version and conventional
         run: |
-          echo "sha: ${{ steps.check-version.outputs.sha }}"
           echo "env SHA-SHORT: ${{ env.SHA-SHORT }}"
+          echo "sha: ${{ steps.check-version.outputs.sha }}"
           echo "short-sha: ${{ steps.check-version.outputs.short-sha }}"
           echo "tag-version: ${{ steps.check-version.outputs.tag-version }}"
           echo "env GIT_TAG_VERSION: ${{ env.GIT_TAG_VERSION }}"
           echo "cc-latest-version: ${{ steps.check-version.outputs.cc-latest-version }}"
           echo "cc-latest-date: ${{ steps.check-version.outputs.cc-latest-date }}"
           echo "cc-latest-status: ${{ steps.check-version.outputs.cc-latest-status }}"
+          echo "cc-latest-changes-log: ${{ steps.check-version.outputs.cc-latest-changes-log }}"

@@ -7,15 +7,23 @@
 # maintainer="https://github.com/sinlov/docker-verdaccio-gitea-auth"
 
 # https://github.com/verdaccio/verdaccio/blob/v5.29.2/Dockerfile
-FROM --platform=${BUILDPLATFORM:-linux/amd64} node:20.10.0-alpine as builder
+# FROM --platform=${BUILDPLATFORM:-linux/amd64} node:20.10.0-alpine as builder
+FROM node:20.10.0-alpine as builder
 
 ARG VERDACCIO_DIST_VERSION=5.29.2
 
 ENV NODE_ENV=production \
-    VERDACCIO_BUILD_REGISTRY=https://registry.npmjs.org  \
+    VERDACCIO_BUILD_REGISTRY=https://registry.npmmirror.com  \
     HUSKY_SKIP_INSTALL=1 \
     CI=true \
     HUSKY_DEBUG=1
+
+# proxy settings github pull
+ARG GITHUB_RPOXY_PREFIX=https://ghproxy.net/
+
+# proxy settings apk repo with: mirrors.aliyun.com
+RUN cp /etc/apk/repositories /etc/apk/repositories.bak && \
+  sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
 
 RUN apk add --force-overwrite && \
     apk --no-cache add openssl ca-certificates wget git && \
@@ -26,7 +34,7 @@ RUN apk add --force-overwrite && \
 
 WORKDIR /opt/verdaccio-build
 
-RUN git clone https://github.com/verdaccio/verdaccio.git --depth=1 -b v${VERDACCIO_DIST_VERSION} /opt/verdaccio-build
+RUN git clone ${GITHUB_RPOXY_PREFIX}https://github.com/verdaccio/verdaccio.git --depth=1 -b v${VERDACCIO_DIST_VERSION} /opt/verdaccio-build
 
 ## build the project and create a tarball of the project for later
 ## global installation
@@ -35,6 +43,7 @@ RUN yarn config set npmRegistryServer $VERDACCIO_BUILD_REGISTRY && \
     yarn config set enableScripts false && \
     yarn install --immutable && \
     yarn add verdaccio-gitea-auth && \
+    yarn add verdaccio-hello && \
     yarn build
 ## pack the project
 RUN yarn pack --out verdaccio.tgz \
@@ -56,6 +65,10 @@ ENV PATH=$VERDACCIO_APPDIR/docker-bin:$PATH \
 
 WORKDIR $VERDACCIO_APPDIR
 
+# proxy settings apk repo with: mirrors.aliyun.com
+RUN cp /etc/apk/repositories /etc/apk/repositories.bak && \
+  sed -i 's/dl-cdn.alpinelinux.org/mirrors.aliyun.com/g' /etc/apk/repositories
+
 # https://github.com/Yelp/dumb-init
 RUN apk --no-cache add openssl dumb-init
 
@@ -64,6 +77,10 @@ RUN mkdir -p /verdaccio/storage /verdaccio/plugins /verdaccio/conf
 COPY --from=builder /opt/tarball .
 
 USER root
+
+# proxy settings for npm
+RUN npm config set registry https://registry.npmmirror.com
+
 # install verdaccio as a global package so is fully handled by npm
 # ensure none dependency is being missing and is prod by default
 RUN npm install -g $VERDACCIO_APPDIR/verdaccio.tgz \

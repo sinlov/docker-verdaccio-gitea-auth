@@ -1,11 +1,9 @@
-.PHONY: test check clean dist
-
 TOP_DIR := $(shell pwd)
 
-ENV_DIST_VERSION=latest
+# default latest
+ENV_DIST_VERSION =latest
 
-ROOT_SWITCH_TAG :=5.29.2
-ROOT_BUILD_OS :=alpine
+ROOT_NAME =docker-verdaccio-gitea-auth
 
 ROOT_BUILD_FOLDER ?=build
 ROOT_BUILD_PATH ?=${ROOT_BUILD_FOLDER}
@@ -13,85 +11,56 @@ ROOT_SCRIPT_FOLDER ?=dist
 ROOT_LOG_PATH ?=./log
 ROOT_DIST ?=./out
 
-TEST_BUILD_PARENT_IMAGE ?=verdaccio/verdaccio:5.29.2
-TEST_BUILD_PARENT_CONTAINNER ?=test-verdaccio-build
-TEST_TAG_BUILD_IMAGE_NAME ?=sinlov/docker-verdaccio-gitea-auth
-TEST_TAG_BUILD_CONTAINER_NAME ?=test-docker-verdaccio-gitea-auth
-TEST_TAG_EXAMPLE_PATH =example
+# MakeImage.mk settings start
+ROOT_OWNER =sinlov
+ROOT_PARENT_SWITCH_TAG :=20.11.0-alpine
+# for image local build
+INFO_TEST_BUILD_DOCKER_PARENT_IMAGE =node
+INFO_BUILD_DOCKER_FILE =Dockerfile
+INFO_TEST_BUILD_DOCKER_FILE =build.dockerfile
+INFO_TEST_BUILD_DOCKER_CONTAINER_ENTRYPOINT =/bin/sh
+INFO_TEST_BUILD_DOCKER_CONTAINER_ARGS =
+# INFO_TEST_BUILD_DOCKER_PARENT_USER =--user root:root
+# MakeImage.mk settings end
 
-all: buildLatestAlpine
+TEST_TAG_EXAMPLE_PATH         =example
+TEST_EXAMPLE_COMPOSE_PROJECT  =${ROOT_NAME}
+TEST_TAG_BUILD_IMAGE_NAME     =${ROOT_OWNER}/${ROOT_NAME}
+TEST_TAG_BUILD_CONTAINER_NAME =test-${ROOT_NAME}
 
-checkBuildPath:
-	@if [ ! -d ${ROOT_BUILD_PATH} ]; then mkdir -p ${ROOT_BUILD_PATH} && echo "~> mkdir ${ROOT_BUILD_PATH}"; fi
+include z-MakefileUtils/MakeImage.mk
 
-checkDistPath:
-	@if [ ! -d ${ROOT_DIST} ]; then mkdir -p ${ROOT_DIST} && echo "~> mkdir ${ROOT_DIST}"; fi
-
-cleanBuild:
-	@$(RM) -r ${ROOT_BUILD_PATH}
-	@echo "~> finish clean path ${${ROOT_BUILD_PATH}}"
-
-cleanLog:
-	@$(RM) -r ${ROOT_LOG_PATH}
-	@echo "~> finish clean path ${${ROOT_LOG_PATH}}"
-
-cleanDist:
-	@$(RM) -r ${ROOT_DIST}
-	@echo "~> finish clean path ${${ROOT_DIST}}"
-
-dockerCleanImages:
-	(while :; do echo 'y'; sleep 3; done) | docker image prune
-
-dockerPruneAll:
-	(while :; do echo 'y'; sleep 3; done) | docker container prune
-	(while :; do echo 'y'; sleep 3; done) | docker image prune
-
-clean: cleanBuild cleanLog
-	@echo "~> clean finish"
-
-runContainerToTestBuild:
-	@echo "run rm container image: ${TEST_BUILD_PARENT_IMAGE}"
-	docker run -d --rm --name ${TEST_BUILD_PARENT_CONTAINNER} \
-	--user root \
-	${TEST_BUILD_PARENT_IMAGE}
+.PHONY: env
+env: dockerEnv
+	@echo "=> Now run as docker-compose folder: ${TEST_TAG_EXAMPLE_PATH}"
+	@echo "TEST_EXAMPLE_COMPOSE_PROJECT       : ${TEST_EXAMPLE_COMPOSE_PROJECT}"
+	@echo "TEST_TAG_BUILD_IMAGE_NAME          : $(TEST_TAG_BUILD_IMAGE_NAME)"
+	@echo "-> env image                       : ${TEST_TAG_BUILD_IMAGE_NAME}:${ENV_DIST_VERSION}"
+	@echo "TEST_TAG_BUILD_CONTAINER_NAME      : $(TEST_TAG_BUILD_CONTAINER_NAME)"
 	@echo ""
-	@echo "run rm container name: ${TEST_BUILD_PARENT_CONTAINNER}"
-	@echo "into container use:  docker exec -it ${TEST_BUILD_PARENT_CONTAINNER} sh"
 
-rmContainerToTestBuild:
-	-docker rm -f ${TEST_BUILD_PARENT_CONTAINNER}
+.PHONY: all
+all: dockerTestRestartLatest
 
-pruneContainerToTestBuild: rmContainerToTestBuild
-	-docker rmi -f ${TEST_BUILD_PARENT_IMAGE}
+.PHONY: clean
+clean: dockerTestPruneLatest
 
-buildTestLatestAlpine: checkBuildPath
-	docker build --tag ${TEST_TAG_BUILD_IMAGE_NAME}:${ENV_DIST_VERSION} .
+.PHONY: bakeCheckConfig
+bakeCheckConfigImageBasic:
+	$(info docker bake: image-basic-all)
+	docker buildx bake --print image-basic-all
 
-runTestLatestAlpine:
-	docker image inspect --format='{{ .Created}}' ${TEST_TAG_BUILD_IMAGE_NAME}:${ENV_DIST_VERSION}
-	docker run -d --name ${TEST_TAG_BUILD_CONTAINER_NAME} -p 4873:4873 ${TEST_TAG_BUILD_IMAGE_NAME}:${ENV_DIST_VERSION}
-	-docker inspect --format='{{ .State.Status}}' ${TEST_TAG_BUILD_CONTAINER_NAME}
+# .PHONY: bakeCheckConfig
+# bakeCheckConfigImageAlpine:
+# 	$(info docker bake: image-alpine-all)
+# 	docker buildx bake --print image-alpine-all
 
-logTestLatestAlpine:
-	-docker logs ${TEST_TAG_BUILD_CONTAINER_NAME}
+.PHONY: bakeCheckConfig
+bakeCheckConfigAll: bakeCheckConfigImageBasic
 
-rmTestLatestAlpine:
-	-docker rm -f ${TEST_TAG_BUILD_CONTAINER_NAME}
-
-rmiTestLatestAlpine:
-	-TEST_TAG_BUILD_CONTAINER_NAME=$(TEST_TAG_BUILD_CONTAINER_NAME) \
-	TEST_TAG_BUILD_IMAGE_NAME=$(TEST_TAG_BUILD_IMAGE_NAME) \
-	ROOT_DOCKER_IMAGE_TAG=$(ENV_DIST_VERSION) \
-	ENV_DIST_VERSION=${ENV_DIST_VERSION} \
-	docker rmi -f ${TEST_TAG_BUILD_IMAGE_NAME}:${ENV_DIST_VERSION}
-
-restartTestLatestAlpine: rmTestLatestAlpine rmiTestLatestAlpine buildTestLatestAlpine runTestLatestAlpine
-	@echo "restrat $(TEST_TAG_BUILD_CONTAINER_NAM{}"
-
-stopTestLatestAlpine: rmTestLatestAlpine rmiTestLatestAlpine
-	@echo "stop and remove $(TEST_TAG_BUILD_CONTAINER_NAM{}"
-
-exampleRun:
+.PHONY: example.check
+example.check: export ROOT_DOCKER_IMAGE_TAG=${ENV_DIST_VERSION}
+example.check:
 	@echo "=> Now run as docker-compose at folder ${TEST_TAG_EXAMPLE_PATH}"
 	@echo "-> env TEST_TAG_BUILD_IMAGE_NAME=$(TEST_TAG_BUILD_IMAGE_NAME)"
 	@echo "-> env ROOT_DOCKER_IMAGE_TAG=$(ENV_DIST_VERSION)"
@@ -100,57 +69,49 @@ exampleRun:
 	@echo "-> env ENV_DIST_VERSION=${ENV_DIST_VERSION}"
 	@echo ""
 	cd ${TEST_TAG_EXAMPLE_PATH} && \
-	TEST_TAG_BUILD_CONTAINER_NAME=$(TEST_TAG_BUILD_CONTAINER_NAME) \
-	TEST_TAG_BUILD_IMAGE_NAME=$(TEST_TAG_BUILD_IMAGE_NAME) \
-	ROOT_DOCKER_IMAGE_TAG=$(ENV_DIST_VERSION) \
-	ENV_DIST_VERSION=${ENV_DIST_VERSION} \
-	docker-compose up -d
+	docker-compose -p ${TEST_EXAMPLE_COMPOSE_PROJECT} config -q
+
+.PHONY: example.run
+example.run: export ROOT_DOCKER_IMAGE_TAG=${ENV_DIST_VERSION}
+example.run: example.check
+	@echo "=> Now run as docker-compose at folder ${TEST_TAG_EXAMPLE_PATH}"
+	@echo "-> env TEST_TAG_BUILD_IMAGE_NAME=$(TEST_TAG_BUILD_IMAGE_NAME)"
+	@echo "-> env ROOT_DOCKER_IMAGE_TAG=$(ENV_DIST_VERSION)"
+	@echo "-> env image: ${TEST_TAG_BUILD_IMAGE_NAME}:${ENV_DIST_VERSION}"
+	@echo "-> env container_name: TEST_TAG_BUILD_CONTAINER_NAME=$(TEST_TAG_BUILD_CONTAINER_NAME)"
+	@echo "-> env ENV_DIST_VERSION=${ENV_DIST_VERSION}"
+	@echo ""
+	cd ${TEST_TAG_EXAMPLE_PATH} && \
+	docker-compose -p ${TEST_EXAMPLE_COMPOSE_PROJECT} up -d --remove-orphans
 	-sleep 5
 	@echo "=> container $(TEST_TAG_BUILD_CONTAINER_NAME) now status"
 	docker inspect --format='{{ .State.Status}}' $(TEST_TAG_BUILD_CONTAINER_NAME)
 
-exampleStop:
+.PHONY: example.logs
+example.logs: export ROOT_DOCKER_IMAGE_TAG=${ENV_DIST_VERSION}
+example.logs: example.check
 	cd ${TEST_TAG_EXAMPLE_PATH} && \
-	TEST_TAG_BUILD_CONTAINER_NAME=$(TEST_TAG_BUILD_CONTAINER_NAME) \
-	TEST_TAG_BUILD_IMAGE_NAME=$(TEST_TAG_BUILD_IMAGE_NAME) \
-	ROOT_DOCKER_IMAGE_TAG=$(ENV_DIST_VERSION) \
-	ENV_DIST_VERSION=${ENV_DIST_VERSION} \
-	docker-compose stop
+	docker-compose -p ${TEST_EXAMPLE_COMPOSE_PROJECT} logs
 
-exampleRm:
+.PHONY: example.stop
+example.stop: export ROOT_DOCKER_IMAGE_TAG=${ENV_DIST_VERSION}
+example.stop: example.check
 	cd ${TEST_TAG_EXAMPLE_PATH} && \
-	TEST_TAG_BUILD_CONTAINER_NAME=$(TEST_TAG_BUILD_CONTAINER_NAME) \
-	TEST_TAG_BUILD_IMAGE_NAME=$(TEST_TAG_BUILD_IMAGE_NAME) \
-	ROOT_DOCKER_IMAGE_TAG=$(ENV_DIST_VERSION) \
-	ENV_DIST_VERSION=${ENV_DIST_VERSION} \
-	docker-compose rm
+	docker-compose -p ${TEST_EXAMPLE_COMPOSE_PROJECT} stop
 
-examplePrune: exampleStop rmiTestLatestAlpine
-	@echo "stop and remove path $(TEST_TAG_EXAMPLE_PATH)"
+.PHONY: example.down
+example.down: export ROOT_DOCKER_IMAGE_TAG=${ENV_DIST_VERSION}
+example.down:
+	cd ${TEST_TAG_EXAMPLE_PATH} && \
+	docker-compose -p ${TEST_EXAMPLE_COMPOSE_PROJECT} down --remove-orphans
 
-buildTag:
-	cd ${ROOT_SCRIPT_FOLDER}/$(ROOT_SWITCH_TAG) && bash build-tag.sh
+.PHONY: example.prune
+example.prune: export ROOT_DOCKER_IMAGE_TAG=${ENV_DIST_VERSION}
+example.prune:
+	-cd ${TEST_TAG_EXAMPLE_PATH} && \
+	docker-compose -p ${TEST_EXAMPLE_COMPOSE_PROJECT} rm
+	@$(RM) -r ${TEST_TAG_EXAMPLE_PATH}/data
 
-dockerRemoveBuild:
-	-docker rmi -f $(TEST_TAG_BUILD_IMAGE_NAME):test-$(ROOT_SWITCH_TAG)
-
-dockerBuild:
-	cd ${ROOT_BUILD_OS} && docker build -t $(TEST_TAG_BUILD_IMAGE_NAME):test-$(ROOT_SWITCH_TAG) .
-	docker run --rm --name ${TEST_TAG_BUILD_CONTAINER_NAME} $(TEST_TAG_BUILD_IMAGE_NAME):test-$(ROOT_SWITCH_TAG) --help
-
-help:
-	@echo "~> make dockerStop      - stop docker-compose container-name at $(TEST_TAG_BUILD_CONTAINER_NAME)"
-	@echo "~> make dockerPrune     - stop docker-compose container-name at $(TEST_TAG_BUILD_CONTAINER_NAME) and try to remove"
-	@echo "Before run this project in docker must use"
-	@echo "~> make dockerLocalImageInit to init Docker image"
-	@echo "or use"
-	@echo "make all ~> fast build"
-	@echo ""
-	@echo "make clean - remove binary file and log files"
-	@echo ""
-	@echo "make buildLatestAlpine ~> build latest alpine"
-	@echo "make buildTag ~> build tag as $(ROOT_SWITCH_TAG) $(ROOT_BUILD_OS)"
-	@echo ""
-	@echo "local test build use"
-	@echo "make dockerRemoveBuild ~> remove $(TEST_TAG_BUILD_IMAGE_NAME):test-$(ROOT_SWITCH_TAG)"
-	@echo "make dockerBuild ~> build $(TEST_TAG_BUILD_IMAGE_NAME):test-$(ROOT_SWITCH_TAG)"
+.PHONY: help
+help: helpDocker
+	@echo "Before run this project in docker must install docker"
