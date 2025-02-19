@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [convention-change-log](https://github.com/convention-change/convention-change-log) for commit guidelines.
 
+## [6.0.5](https://github.com/sinlov/docker-verdaccio-gitea-auth/compare/6.0.1...v6.0.5) (2025-02-19)
+
+### 👷‍ Build System
+
+* update verdaccio version to 6.0.5 ([79cce187](https://github.com/sinlov/docker-verdaccio-gitea-auth/commit/79cce187b11ea60c883e293c5798fd7f6d288d94)), build [#14](https://github.com/sinlov/docker-verdaccio-gitea-auth/issues/14)
+
+* update docker bake action to v6 and add build file check ([fd3471b7](https://github.com/sinlov/docker-verdaccio-gitea-auth/commit/fd3471b7c836f89ef5b19a8d3dda4ed2fff68d34)), feat [#12](https://github.com/sinlov/docker-verdaccio-gitea-auth/issues/12)
+
 ## [6.0.1](https://github.com/sinlov/docker-verdaccio-gitea-auth/compare/5.32.2...v6.0.1) (2024-11-09)
 
 ### ✨ Features
