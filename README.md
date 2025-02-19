@@ -148,9 +148,9 @@ docker-compose up -d
 
 now support verdaccio `v6.x` `v5.x`
 
-- change verdaccio version `6.0.1`
+- change verdaccio version `6.0.5`
     - glibc `2.35-r0`
-    - node version `20.18.0`
+    - node version `20.18.1`
     - yarn version `yarn-v1.22.19`
 
 ## Contributing
